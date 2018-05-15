@@ -8,28 +8,21 @@ import javafx.scene.shape.Circle;
 
 public class MainController {
 
-    private ImageView image = new ImageView("cat.png");
-    //private ImageButton CatDog = new ImageButton();
+    private ImageView image_cat = new ImageView("cat.png");
+    private ImageView image_dog = new ImageView("dog.png");
+    private ImageButton CatDog = new ImageButton();
     private Circle c = new Circle(50, Color.valueOf("red"));
-    Image imgDog = new Image("dog.png");
-    @FXML
-    private GridPane Grid;
 
     @FXML
-    private ImageView imgOne;
-
-    @FXML
-    private Button btnOne;
+    private GridPane Grid = new GridPane();
 
    public MainController() {
-       //super();
        initialize();
     }
 
     public void initialize(){
-        ImageButton CatDog = new ImageButton();
-        imgOne.setImage(imgDog);
-        Grid.setConstraints(CatDog, 1,0);
-        Grid.setConstraints(imgOne, 1, 1 );
+
+        Grid.add(CatDog, 0,0);
+
     }
 }
