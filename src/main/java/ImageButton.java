@@ -13,12 +13,14 @@ public class ImageButton extends Parent{
     private static final Image NORMAL_IMAGE = new Image("cat.png", true);
     private static final Image PRESSED_IMAGE = new Image("frog.png", true);
 
-    private ImageView iv = new ImageView(new Image("frog.png", true));
+    private ImageView iv = new ImageView(new Image("cat.png", true));
 
-    public ImageButton() {
+    public ImageButton(){}
+
+    public ImageButton(ImageView i) {
         super();
-        this.iv = new ImageView(NORMAL_IMAGE);
-        this.getChildren().add(this.iv);
+        i = new ImageView(NORMAL_IMAGE);
+        this.getChildren().add(i);
 
         this.iv.setOnMousePressed(new EventHandler<MouseEvent>() {
 
