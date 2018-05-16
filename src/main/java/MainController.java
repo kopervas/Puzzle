@@ -1,7 +1,13 @@
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -13,12 +19,15 @@ import java.util.Random;
 
 public class MainController {
     ArrayList<Image> list = new ArrayList<Image>();
-   //Image[] list = new Image[4];
+    int score = 0;
 
     private ImageView image_cat = new ImageView("cat.png");
     private ImageView image_dog = new ImageView("dog.png");
     private ImageButton CatDog = new ImageButton(image_cat);
     private Circle c = new Circle(50, Color.valueOf("red"));
+
+    @FXML
+    private Label scores;
 
     @FXML
     private GridPane Grid = new GridPane();
@@ -35,6 +44,17 @@ public class MainController {
         list.add(3, new Image("fish.png"));
 
         fill();
+
+        Grid.addEventFilter(Event.ANY, new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                //System.out.println(event.getEventType().getClass().toString());
+                if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
+                    System.out.println(event.getEventType().getClass().toString());
+                    scores.setText(String.valueOf(score += 10));
+                }
+            }
+        });
     }
 
     private void fill(){
