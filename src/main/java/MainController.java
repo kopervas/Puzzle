@@ -3,6 +3,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -50,11 +51,16 @@ public class MainController {
             public void handle(Event event) {
                 //System.out.println(event.getEventType().getClass().toString());
                 if(event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
-                    System.out.println(event.getEventType().getClass().toString());
-                    scores.setText(String.valueOf(score += 10));
-                }
-            }
-        });
+                    onPlay(event);
+                    /*Object node = event.getTarget();
+                        if( node instanceof ImageButton) {
+                               System.out.println("Node: " + node + " at " + String.valueOf(((ImageButton) node).getRowIndex()) + "/" + String.valueOf(((ImageButton) node).getColIndex()));
+                                scores.setText(String.valueOf(score += 10));*/
+                            }
+                        }
+                });
+            //});
+
     }
 
     private void fill(){
@@ -66,8 +72,26 @@ public class MainController {
                img = list.get(n);
                ImageView imv = new ImageView(img);
                ImageButton imb = new ImageButton(imv);
+               imb.setRowIndex(i);
+               imb.setColIndex(j);
                Grid.add(imb, i, j);
            }
        }
+    }
+
+    private void onPlay(Event event) {
+        ArrayList<ImageButton> temp = new ArrayList<ImageButton>();
+        boolean b = false;
+
+        Object node = event.getTarget();
+        if (node instanceof ImageButton) {
+            //System.out.println("Node: " + node + " at " + String.valueOf(((ImageButton) node).getRowIndex()) + "/" + String.valueOf(((ImageButton) node).getColIndex()));
+            if(temp.size() == 0)
+                temp.add((ImageButton)node);
+            else if(((ImageButton) node).getIndex() == temp.get(0).getIndex())
+                temp.add((ImageButton)node);
+
+            scores.setText(String.valueOf(score += 10));
+        }
     }
 }
