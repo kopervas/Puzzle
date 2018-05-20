@@ -38,6 +38,10 @@ public class MainController {
        //fill();
     }
 
+    /**
+     * Метод ініціалізації, в якому додається обробник події Mouse.EVENT_CLICKED
+     * @throws Throwable
+     */
     public void initialize() throws Throwable{
         list.add(0, new Image("cat.png"));
         list.add(1, new Image("dog.png"));
@@ -82,6 +86,12 @@ public class MainController {
             }
         }
 
+    /**
+     *  В цьому методі ми отримуємо подію, аналізуємо, який об'єкт виділено, і, якщо
+     *  це зображення потрібного виду, збільшуємо лічильник @counter
+     * @param event
+     * @throws Throwable
+     */
     private void onPlay(Event event) throws Throwable {
 
         boolean b = false;
