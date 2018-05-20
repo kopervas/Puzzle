@@ -45,7 +45,11 @@ public class ImageButton extends Parent{
         this.setOnMousePressed(new EventHandler<MouseEvent>() {
 
             public void handle(MouseEvent evt) {
-                bingo();
+                try {
+                    bingo();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 //getIcon(iv);
             }
 
@@ -73,7 +77,7 @@ public class ImageButton extends Parent{
         return index;
     }
 
-    public void bingo(){
+    public void bingo() throws Throwable{
         this.blendModeProperty().setValue(BlendMode.OVERLAY);
     }
 
