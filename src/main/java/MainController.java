@@ -1,6 +1,7 @@
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -88,33 +89,33 @@ public class MainController {
 
     /**
      *  В цьому методі ми отримуємо подію, аналізуємо, який об'єкт виділено, і, якщо
-     *  це зображення потрібного виду, збільшуємо лічильник @counter
+     *  це зображення потрібного виду, метод повертає true та збільшує лічильник @counter
+     *  Якщо зображення не співпадає з обраним за першим кліком, повертаємо false
      * @param event
      * @throws Throwable
      */
-    private void onPlay(Event event) throws Throwable {
-
+    private boolean onPlay(Event event) throws Throwable {
         boolean b = false;
-
         Object node = event.getTarget();
-        System.out.println(event.toString());
-        if (node instanceof ImageView) {
-            //System.out.println("Node: " + node + " at " + String.valueOf(((ImageButton) node).getRowIndex()) + "/" + String.valueOf(((ImageButton) node).getColIndex()));
-            if (temp.size() == 0 || ((ImageView)node).getImage()  == temp.get(0).getImage()) {
-                temp.add((ImageView) node);
-                counter++;
-                System.out.println(temp.size() + "  " + counter);
-            }
-            else if (node  == temp.get(0)) {
-                temp.add((ImageView) node);
-                counter++;
-            }
 
+        //System.out.println(event.toString());
+        if (node instanceof ImageView) {
+            if ( temp.size() >= 0 && (((ImageButton)(((ImageView) node).getParent())).getIndex()  == ((ImageButton)((temp.get(0))).getParent()).getIndex()) && (((ImageButton)(((ImageView) node).getParent())).getRowIndex() == ((ImageButton)((temp.get(0))).getParent()).getRowIndex()) && (((ImageButton)((((ImageView) node).getParent()))).getColIndex() == ((ImageButton)((temp.get(0))).getParent()).getColIndex()) ) {
+                temp.add((ImageView) event.getTarget());                                                                //В цьому рядку вся проблема! - 21.05.18
+                counter++;
+            }
+            else
+            {
+                System.out.println("False! " + temp.size());
+                return false;
+            }
 
             scores.setText(String.valueOf(score += 10));
-            System.out.println(node);
+            System.out.println("RowIndex ? " + ((ImageButton)(((ImageView) node).getParent())).getRowIndex());
+            System.out.println("ColIndex ? " + ((ImageButton)(((ImageView) node).getParent())).getColIndex());
             System.out.println(temp.size() + "  " + counter);
             System.out.println(event.getSource());
         }
+        return true;
     }
 }
