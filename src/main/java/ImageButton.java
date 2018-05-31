@@ -22,9 +22,11 @@ public class ImageButton extends Parent{
 
     private ImageView iv = new ImageView(new Image("white.png", true));
 
-    public void getIcon(ImageView i){
+    public void setIcon(ImageView i){
         this.getChildren().add(i);
     }
+
+    public ImageView getIcon() {return (ImageView) this.getChildren();}
 
     public ImageButton(){}
 

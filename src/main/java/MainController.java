@@ -20,15 +20,14 @@ import java.util.Random;
 
 public class MainController {
     ArrayList<Image> list = new ArrayList<Image>();
+    //Тимчасовий масив для кнопок, обраних користувачем під час гри
     ArrayList<ImageView> temp = new ArrayList<>();
     int score = 0;
     int counter = 0;
+    //Масив кнопок, призначений для перезавантаження елементів Grid
     ImageButton[][] matrix = new ImageButton[5][6];
-
-    private ImageView image_cat = new ImageView("cat.png");
-    private ImageView image_dog = new ImageView("dog.png");
-    private ImageButton CatDog = new ImageButton(image_cat);
-    private Circle c = new Circle(50, Color.valueOf("red"));
+    //Тимчасова змінна для поміщення останньої обраної кнопки
+    ImageButton buffer = new ImageButton();
 
     @FXML
     private Label scores;
@@ -115,11 +114,11 @@ public class MainController {
      * @return
      */
     private boolean Perevirka(ImageView imv) {
+        //if(buffer == null || ((buffer.getIcon() == imv) && ((buffer.getRowIndex() == ((ImageButton)imv.getParent()).getRowIndex()) || ((buffer.getColIndex() == ((ImageButton)imv.getParent()).getColIndex())))){
         if ((CheckSize(imv) == true) || (CheckImage(imv) && (CheckRowIndex(imv) || CheckColIndex(imv)))) {
             imv.blendModeProperty().setValue(BlendMode.OVERLAY);
             return true;
         }
-        //}
         return false;
     }
 
@@ -186,9 +185,10 @@ public class MainController {
             return false;
         }
 
-
+    /**
+     *  Метод, який перезавантажує елементи на Grid з врахуванням вибраних гравцем кнопок
+     */
     private void MoveArray() {
-            //ImageButton[][] temp = matrix;
             for(int i = 0; i < 6; i++){
                 for(int j = 0; j < 5; j++){
                     if((matrix[j][i].blendModeProperty().getValue() == BlendMode.OVERLAY) && j == 0)
@@ -205,7 +205,6 @@ public class MainController {
         Grid.getChildren().clear();
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
-               //Grid.add(null, i, j);
                     Grid.add(matrix[j][i], i, j);
                 }
             }
