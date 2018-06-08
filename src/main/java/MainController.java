@@ -22,12 +22,15 @@ public class MainController {
     ArrayList<Image> list = new ArrayList<Image>();
     //Тимчасовий масив для кнопок, обраних користувачем під час гри
     ArrayList<ImageView> temp = new ArrayList<>();
+    Random r = new Random();
     int score = 0;
-    int counter = 0;
+    int silver_score = 0;
+    int gold_score = 0;
+
     //Масив кнопок, призначений для перезавантаження елементів Grid
     ImageButton[][] matrix = new ImageButton[5][6];
     //Тимчасова змінна для поміщення останньої обраної кнопки
-    ImageButton buffer = new ImageButton();
+    ImageButton[] buffer = new ImageButton[1];
 
     @FXML
     private Label scores;
@@ -90,7 +93,6 @@ public class MainController {
      * @throws Throwable
      */
     private void fill() throws Throwable {
-        Random r = new Random();
         Image img;
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
@@ -114,9 +116,8 @@ public class MainController {
      * @return
      */
     private boolean Perevirka(ImageView imv) {
-        //if(buffer == null || ((buffer.getIcon() == imv) && ((buffer.getRowIndex() == ((ImageButton)imv.getParent()).getRowIndex()) || ((buffer.getColIndex() == ((ImageButton)imv.getParent()).getColIndex())))){
-        if ((CheckSize(imv) == true) || (CheckImage(imv) && (CheckRowIndex(imv) || CheckColIndex(imv)))) {
-            imv.blendModeProperty().setValue(BlendMode.OVERLAY);
+        if ((CheckSize(imv) == true) || (CheckImage(imv) && ((CheckRowIndex(imv) || CheckColIndex(imv))))) {
+                imv.blendModeProperty().set(BlendMode.OVERLAY);//Value(BlendMode.OVERLAY); - Ур-ра!!! Здається, вийшло! - 08.06.18
             return true;
         }
         return false;
@@ -124,6 +125,7 @@ public class MainController {
 
     private boolean CheckSize(ImageView imv) {
         if (temp.size() == 0) {
+            System.out.println("Check Size!");
             return true;
         }
         return false;
@@ -134,6 +136,7 @@ public class MainController {
             System.out.println("Check Image!");
             return true;
         }
+        System.out.println("False check Image!");
         return false;
     }
 
@@ -166,39 +169,41 @@ public class MainController {
         Object node = event.getTarget();
 
         if (node instanceof ImageView) {
-            if (Perevirka((ImageView) node) == true) {//temp.size() >= 0 || ((((ImageView) node).getParent())  == (((temp.get(0))).getParent())) && ((((ImageButton)(((ImageView) node).getParent())).getRowIndex() == ((ImageButton)((temp.get(0))).getParent()).getRowIndex()) && (((ImageButton)((((ImageView) node).getParent()))).getColIndex() == ((ImageButton)((temp.get(0))).getParent()).getColIndex())) ) {
-                //((ImageView) node).getParent().blendModeProperty().setValue(BlendMode.OVERLAY);
+            if (Perevirka((ImageView) node) == true) {
                 temp.add((ImageView) node);                                                                //В цьому рядку вся проблема! - 21.05.18
-                counter++;
                 return true;
             } else {
                 System.out.println("False! " + temp.size());
+                if (temp.size() > 0 && temp.size() < 3)
+                    scores.setText(String.valueOf(score += 1));
+                else if (temp.size() >= 3 && temp.size() < 6)
+                    silver_scores.setText(String.valueOf(silver_score += 1));
+                else if (temp.size() >= 6)
+                    gold_scores.setText(String.valueOf(gold_score += 1));
+                System.out.println(temp.size());
                 MoveArray();
-                return false;
             }
-
-            //if (temp.size() > 0 && temp.size() < 4)
-               // scores.setText(String.valueOf(score += 10));
-            //else if (temp.size() > 3 && temp.size() < 6)
-               // silver_scores.setText(String.valueOf(score += 20));
         }
             return false;
         }
 
     /**
      *  Метод, який перезавантажує елементи на Grid з врахуванням вибраних гравцем кнопок
+     *  і очищає список обраних ImageButton який називається "temp"
      */
     private void MoveArray() {
             for(int i = 0; i < 6; i++){
                 for(int j = 0; j < 5; j++){
-                    if((matrix[j][i].blendModeProperty().getValue() == BlendMode.OVERLAY) && j == 0)
-                        matrix[j][i] = new ImageButton(new ImageView("white.png"));
-                    else if(matrix[j][i].blendModeProperty().getValue() == BlendMode.OVERLAY){
-                        for(int k = j; k > 0; k--) {
-                            matrix[k][i] = matrix[k-1][i];
+                   //if((matrix[j][i].getRowIndex() != ((ImageButton) temp.get(temp.size()-1).getParent()).getRowIndex()) && (matrix[j][i].getColIndex() != ((ImageButton) temp.get(temp.size()-1).getParent()).getColIndex())) {
+                        if ((matrix[j][i].blendModeProperty().getValue() == BlendMode.OVERLAY) && j == 0)
+                            matrix[j][i] = CreateButton(); //new ImageButton(new ImageView("white.png"));
+                        else if (matrix[j][i].blendModeProperty().getValue() == BlendMode.OVERLAY) {
+                            for (int k = j; k > 0; k--) {
+                                matrix[k][i] = matrix[k - 1][i];
                             }
-                        matrix[0][i] = new ImageButton(new ImageView("white.png"));
-                    }
+                            matrix[0][i] = CreateButton(); //new ImageButton(new ImageView("white.png"));
+                        }
+                    //}
                 }
         }
 
@@ -208,8 +213,17 @@ public class MainController {
                     Grid.add(matrix[j][i], i, j);
                 }
             }
+            temp.clear();       //додано 01.06.18
     }
 
+    private ImageButton CreateButton(){
+        ImageButton imb = new ImageButton(new ImageView(list.get(r.nextInt(4))));
+        return imb;
+    }
+
+    /**
+     * Метод розроблений мною для перевірки різних ідей, як працювати з Grid.
+     */
     @FXML
     private void toArray() {
         int c = 1;
